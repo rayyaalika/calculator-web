@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\calculator;
+use App\Models\history;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,31 +14,17 @@ class CalculatorController extends Controller
         return view('calculator');
     }
 
-    public function calculate(Request $request)
+    public function Calculate(Request $request)
     {
         $operand1 = $request->input('operand1');
         $operand2 = $request->input('operand2');
         $operator = $request->input('operator');
 
-        // Lakukan perhitungan
-        switch ($operator) {
-            case '+':
-                $result = $operand1 + $operand2;
-                break;
-            case '-':
-                $result = $operand1 - $operand2;
-                break;
-            case '*':
-                $result = $operand1 * $operand2;
-                break;
-            case '/':
-                $result = $operand1 / $operand2;
-                break;
-            default:
-                $result = null;
-        }
+        // melakukan perhitungan
+        $calculator = new Calculator();
+        $result = $calculator->calculateResult($operand1, $operand2, $operator);
 
-        // Simpan riwayat perhitungan ke dalam database
+        // Menyiimpan riwayat perhitungan ke dalam database
         DB::table('calculations')->insert([
             'operand1' => $operand1,
             'operand2' => $operand2,
@@ -47,7 +35,7 @@ class CalculatorController extends Controller
         return redirect()->route('calculator.index')->with('success', 'Perhitungan berhasil! Hasil: ' . $result);
     }
 
-    public function history()
+    public function History()
     {
         $calculations = DB::table('calculations')->orderByDesc('created_at')->get();
         return view('history', ['calculations' => $calculations]);

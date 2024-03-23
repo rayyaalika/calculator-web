@@ -30,6 +30,7 @@
                             <option value="-">-</option>
                             <option value="*">*</option>
                             <option value="/">/</option>
+                            <option value="%">%</option>
                         </select>
                     </div>
                     <div class="form-group">
